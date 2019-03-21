@@ -7,13 +7,24 @@ if(!empty($_POST["emailid"])) {
 		echo "error : You did not enter a valid email.";
 	}
 	else {
-		$result ="SELECT count(*) FROM userRegistration WHERE email=?";
-		$stmt = $mysqli->prepare($result);
-		$stmt->bind_param('s',$email);
+
+		$result = "SELECT count(*) FROM userregistration WHERE email=?";
+
+	if($stmt = $mysqli->prepare($result)) 
+	{ // assuming $mysqli is the connection
+	    $stmt->bind_param('s',$email);
 		$stmt->execute();
-$stmt->bind_result($count)
-#$stmt->fetch();
-#$stmt->close();
+		$stmt->bind_result($count);
+		$stmt->fetch();
+		$stmt->close();
+	    // any additional code you need would go here.
+	} 
+	else 
+	{
+    $error = $mysqli->errno . ' ' . $mysqli->error;
+    echo $error; // 1054 Unknown column 'foo' in 'field list'
+    }
+		
 if($count>0)
 {
 echo "<span style='color:red'> Email already exist .</span>";
